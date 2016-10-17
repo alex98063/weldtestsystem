@@ -243,6 +243,7 @@
             this.button17.TabIndex = 14;
             this.button17.Text = "送丝";
             this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
             // 
             // button16
             // 
@@ -252,6 +253,7 @@
             this.button16.TabIndex = 13;
             this.button16.Text = "降温";
             this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
             // 
             // button15
             // 
@@ -423,16 +425,10 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "COM1",
-            "COM2",
-            "COM3",
-            "COM4"});
             this.comboBox1.Location = new System.Drawing.Point(96, 40);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(103, 26);
             this.comboBox1.TabIndex = 2;
-            this.comboBox1.Text = "COM1";
             // 
             // button2
             // 

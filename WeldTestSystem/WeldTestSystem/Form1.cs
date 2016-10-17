@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
@@ -16,25 +13,66 @@ namespace WeldTestSystem
     {
         public Form1()
         {
+
+            string[] strport = SerialPort.GetPortNames();
+
+            if (strport.Length == 0)
+            {
+                MessageBox.Show("本机没有端口", "Error");
+                return;
+               
+            }
+
             InitializeComponent();
+
+          
 
             panel1.Visible = true;
             panel2.Visible = false;
+            button1.BackColor = Color.Red;
             button14.BackColor = Color.Red;
+            button12.BackColor = Color.Red;
+            button3.BackColor = Color.Red;
+            button4.BackColor = Color.Red;
+            button5.BackColor = Color.Red;
+            button6.BackColor = Color.Red;
+            button7.BackColor = Color.Red;
+            button8.BackColor = Color.Red;
+            button9.BackColor = Color.Red;
+            button10.BackColor = Color.Red;
+            button11.BackColor = Color.Red;
+            button13.BackColor = Color.Red;
+            button15.BackColor = Color.Red;
+            button16.BackColor = Color.Red;
 
-            StartDevice();
 
-            System.Threading.Timer newtimer = new System.Threading.Timer(new TimerCallback(timerio_Tick), null, 0, 1000);
 
+            foreach (string s in strport)
+            {
+                comboBox1.Items.Add(s);
+            }
+            comboBox1.SelectedIndex = 0;
+
+
+            groupBox3.Visible = false;
+            groupBox4.Visible = false;
+            groupBox5.Visible = false;
+
+
+           
+
+            Thread IOthread = new Thread(IOListener);
+            IOthread.Start();
 
 
 
         }
 
-        private void timerio_Tick(object sender)
+        private void IOListener()
         {
             try
             {
+
                 hDevice = USB5831.USB5831_CreateDevice(DeviceLgcID);
                 if (hDevice == (IntPtr)(-1))
                 {
@@ -48,33 +86,212 @@ namespace WeldTestSystem
 
                 }
 
-                if (!USB5831.USB5831_GetDeviceDI(hDevice, bDISts)) // 开关量输入
+                do
                 {
-                    Console.WriteLine("USB5831_GetDeviceDI...");
-                    USB5831.USB5831_ReleaseDevice(hDevice);   // 释放设备对象
-                    return;
-                }
+                    lock (this)
+                    {
 
-                //for (Int32 i = 0; i < 13; i++)
-                //{
-                Int32 i = 0;
-                if (bDISts[i] == 1)
-                {
-                    button14.Text = "关";
-                    Console.WriteLine(i.ToString() + "on");
-                    button14.BackColor = Color.Green;
-                }
-                else
-                {
-                    button14.Text = "开";
-                    Console.WriteLine(i.ToString() + "off");
-                    button14.BackColor = Color.Red;
-                }
-                //}
+                      
+
+                        if (!USB5831.USB5831_GetDeviceDI(hDevice, bDISts)) // 开关量输入
+                        {
+                            Console.WriteLine("USB5831_GetDeviceDI...");
+                            USB5831.USB5831_ReleaseDevice(hDevice);   // 释放设备对象
+                            return;
+                        }
+
+                        Console.WriteLine("...");
+
+                        if (bDISts[0] == 1)
+                        {
+                            ComSend("1lr10000");
+                            ComSend("1sp200");
+                            ComSend("1m");
+                            button8.BackColor = Color.Green;
+                            
+                        }
+                        else
+                        {
+                            button8.BackColor = Color.Red;
+                        }
+                        if (bDISts[1] == 1)
+                        {
+                            ComSend("1lr-10000");
+                            ComSend("1sp200");
+                            ComSend("1m");
+                            button7.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button7.BackColor = Color.Red;
+                        }
+                        if (bDISts[2] == 1)
+                        {
+                            ComSend("2lr10000");
+                            ComSend("2sp200");
+                            ComSend("2m");
+                            button5.BackColor = Color.Green;
+                        }
+                        else
+                        {
+                            button5.BackColor = Color.Red;
+                        }
+
+                        if (bDISts[3] == 1)
+                        {
+
+                            ComSend("2lr-10000");
+                            ComSend("2sp200");
+                            ComSend("2m");
+                            button6.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button6.BackColor = Color.Red;
+                        }
+                        if (bDISts[4] == 1)
+                        {
+                            ComSend("3lr-10000");
+                            ComSend("3sp200");
+                            ComSend("3m");
+                            button4.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button4.BackColor = Color.Red;
+                        }
+                        if (bDISts[5] == 1)
+                        {
+
+                            ComSend("3lr10000");
+                            ComSend("3sp200");
+                            ComSend("3m");
+                            button3.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button3.BackColor = Color.Red;
+                        }
+                        if (bDISts[6] == 1)
+                        {
+                            ComSend("4LR-1000");
+                            ComSend("4sp200");
+                            ComSend("4m");
+                            button10.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button10.BackColor = Color.Red;
+                        }
+                        if (bDISts[7] == 1)
+                        {
+                            ComSend("4LR1000");
+                            ComSend("4sp200");
+                            ComSend("4m");
+                            button9.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button9.BackColor = Color.Red;
+                        }
+                        if (bDISts[8] == 1)
+                        {
+                            ComSend("1HO");
+                            ComSend("2HO");
+                            ComSend("3HO");
+                            ComSend("4HO");
+                            button11.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button11.BackColor = Color.Red;
+                        }
+
+                        if (bDISts[9] == 1)
+                        {
+                            ComSend("1V0");
+                            ComSend("2V0");
+                            ComSend("3V0");
+                            ComSend("4V0");
+                            button12.BackColor = Color.Green;
+                        }
+                        else
+                        {
+                           
+                            button12.BackColor = Color.Red;
+                        }
+                        if (bDISts[10] == 1)
+                        {
+                            ComSend("1LA0");
+                            ComSend("2LA0");
+                            ComSend("3LA0");
+                            ComSend("4LA0");
+
+                            ComSend("1SP200");
+                            ComSend("2SP200");
+                            ComSend("3SP200");
+                            ComSend("4SP200");
+
+                            ComSend("1NP");
+                            ComSend("2NP");
+                            ComSend("3NP");
+                            ComSend("4NP");
+
+                            ComSend("1M");
+                            ComSend("2M");
+                            ComSend("3M");
+                            ComSend("4M");
+                            button15.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button15.BackColor = Color.Red;
+                        }
+                        if (bDISts[11] == 1)
+                        {
+
+                            button16.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button16.BackColor = Color.Red;
+                        }
+                        if (bDISts[12] == 1)
+                        {
+                            ComSend("1V0");
+                            ComSend("2V0");
+                            ComSend("3V0");
+                            ComSend("4V0");
+                            button13.BackColor = Color.Green;
+                        }
+                        else
+                        {
+
+                            button13.BackColor = Color.Red;
+                        }
+
+                    }
+
+                    Thread.Sleep(50);
+
+                } while (true);
+
+
+                //    
+                //   
             }
             catch
-            {            
-            
+            {
+
             }
 
         }
@@ -87,6 +304,21 @@ namespace WeldTestSystem
         Byte[] bDOSts = new Byte[13];
         IntPtr hDevice;
         Int32 DeviceLgcID = 0;
+
+        bool bReturn;               // 函数的返回值
+        Int32 nReadSizeWords;       // 每次读取AD数据个数
+        Int32 nRetWords = 0;            // 实际读取的数据个数
+        Int32 nChannelCount = 0;    // 采样通道数
+        UInt16[] ADBuffer = new UInt16[32768];  // 接收AD 数据的缓冲区
+        UInt16 ADData;
+        float Volt = 0.0f;          // 将AD原始数据转换为电压值
+        Int32 nRemainder = 0;
+        Int32 InputRange = 2;
+        Int32 OutputRange = 0;
+        Int32 nDAChannel = 2;
+        float Voltage = (float)2000;
+        Int16 nDAData = 0;
+        bool bRetStatus; // 函数的返回值
 
         private void StartDevice()
         {
@@ -300,7 +532,7 @@ namespace WeldTestSystem
             panel1.Visible = false;
 
             panel2.Visible = true;
-          
+
 
         }
 
@@ -320,7 +552,7 @@ namespace WeldTestSystem
             ofd.DefaultExt = ".csv";
             ofd.Filter = "csv file|*.csv";
 
-            if (ofd.ShowDialog()==DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
                 label9.Text = ofd.FileName;
 
@@ -368,18 +600,26 @@ namespace WeldTestSystem
 
                 if (ComOpen(comname, botelv))
                 {
-                    MessageBox.Show(comname + "串口已连接！");
+                    //MessageBox.Show(comname + "串口已连接！");
                     button1.Text = "断开";
+                    button1.BackColor = Color.Green;
+                 
                     ComPortIsOpen = true;
                     port.DataReceived += new SerialDataReceivedEventHandler(ComRec);
-
+                    groupBox3.Visible = true;
+                    groupBox4.Visible = true;
+                    groupBox5.Visible = true;
 
                 }
                 else
                 {
-                    MessageBox.Show("无法打开串口,请检测此串口是否有效或被其他占用！");
+                  //  MessageBox.Show("无法打开串口,请检测此串口是否有效或被其他占用！");
                     ComPortIsOpen = false;
-
+                    button1.BackColor = Color.Red;
+                    button1.Text = "连接";
+                    groupBox3.Visible = false;
+                    groupBox4.Visible = false;
+                    groupBox5.Visible = false;
                 }
 
             }
@@ -388,7 +628,11 @@ namespace WeldTestSystem
                 ComClose();
                 ComPortIsOpen = false;
                 button1.Text = "连接";
-                MessageBox.Show("串口连接断开！");
+                button1.BackColor = Color.Red;
+               // MessageBox.Show("串口连接断开！");
+                groupBox3.Visible = false;
+                groupBox4.Visible = false;
+                groupBox5.Visible = false;
 
             }
         }
@@ -444,43 +688,64 @@ namespace WeldTestSystem
 
         private void button3_Click(object sender, EventArgs e)
         {
-            ComSend("3v-100");
+           ComSend("3lr10000");
+           ComSend("3sp200");
+           ComSend("3m");
+
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            ComSend("2v-300");
+            ComSend("2lr10000");
+            ComSend("2sp200");
+            ComSend("2m");
+
+           
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
 
-            ComSend("2v300");
+            ComSend("2lr-10000");
+            ComSend("2sp200");
+            ComSend("2m");
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            ComSend("3v100");
+            ComSend("3lr-10000");
+            ComSend("3sp200");         
+            ComSend("3m");
+           
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            ComSend("1v-300");
+            ComSend("1lr-10000");
+            ComSend("1sp200");
+            ComSend("1m");
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
-            ComSend("1v300");
+            ComSend("1lr10000");
+            ComSend("1sp200");
+            ComSend("1m");
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-            ComSend("4v-100");
+            ComSend("4LR1000");
+            ComSend("4sp200");
+            ComSend("4m");
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
-            ComSend("4v100");
+            ComSend("4LR-1000");
+            ComSend("4sp200");
+            ComSend("4m");
+
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -577,14 +842,24 @@ namespace WeldTestSystem
                 }
 
 
-            }		
+            }
         }
 
         private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
-       
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+
+        }
+
 
 
     }
