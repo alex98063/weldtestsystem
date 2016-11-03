@@ -18,7 +18,7 @@ namespace WeldTestSystem
 
             if (strport.Length == 0)
             {
-                MessageBox.Show("本机没有端口", "Error");
+                MessageBox.Show("本机没找到端口", "Error");
                 return;
                
             }
@@ -104,9 +104,7 @@ namespace WeldTestSystem
 
                         if (bDISts[0] == 1)
                         {
-                            ComSend("1lr10000");
-                            ComSend("1sp200");
-                            ComSend("1m");
+                            rightmove();
                             button8.BackColor = Color.Green;
                             
                         }
@@ -116,9 +114,7 @@ namespace WeldTestSystem
                         }
                         if (bDISts[1] == 1)
                         {
-                            ComSend("1lr-10000");
-                            ComSend("1sp200");
-                            ComSend("1m");
+                            leftmove();
                             button7.BackColor = Color.Green;
                         }
                         else
@@ -128,9 +124,7 @@ namespace WeldTestSystem
                         }
                         if (bDISts[2] == 1)
                         {
-                            ComSend("2lr10000");
-                            ComSend("2sp200");
-                            ComSend("2m");
+                            forwardmove();
                             button5.BackColor = Color.Green;
                         }
                         else
@@ -141,9 +135,7 @@ namespace WeldTestSystem
                         if (bDISts[3] == 1)
                         {
 
-                            ComSend("2lr-10000");
-                            ComSend("2sp200");
-                            ComSend("2m");
+                            backwardmove();
                             button6.BackColor = Color.Green;
                         }
                         else
@@ -153,9 +145,7 @@ namespace WeldTestSystem
                         }
                         if (bDISts[4] == 1)
                         {
-                            ComSend("3lr-10000");
-                            ComSend("3sp200");
-                            ComSend("3m");
+                            downmove();
                             button4.BackColor = Color.Green;
                         }
                         else
@@ -166,9 +156,7 @@ namespace WeldTestSystem
                         if (bDISts[5] == 1)
                         {
 
-                            ComSend("3lr10000");
-                            ComSend("3sp200");
-                            ComSend("3m");
+                            upmove();
                             button3.BackColor = Color.Green;
                         }
                         else
@@ -178,9 +166,7 @@ namespace WeldTestSystem
                         }
                         if (bDISts[6] == 1)
                         {
-                            ComSend("4LR-1000");
-                            ComSend("4sp200");
-                            ComSend("4m");
+                            counterclock();
                             button10.BackColor = Color.Green;
                         }
                         else
@@ -190,9 +176,7 @@ namespace WeldTestSystem
                         }
                         if (bDISts[7] == 1)
                         {
-                            ComSend("4LR1000");
-                            ComSend("4sp200");
-                            ComSend("4m");
+                            clockmove();
                             button9.BackColor = Color.Green;
                         }
                         else
@@ -202,10 +186,7 @@ namespace WeldTestSystem
                         }
                         if (bDISts[8] == 1)
                         {
-                            ComSend("1HO");
-                            ComSend("2HO");
-                            ComSend("3HO");
-                            ComSend("4HO");
+                            conformbtn();
                             button11.BackColor = Color.Green;
                         }
                         else
@@ -216,10 +197,7 @@ namespace WeldTestSystem
 
                         if (bDISts[9] == 1)
                         {
-                            ComSend("1V0");
-                            ComSend("2V0");
-                            ComSend("3V0");
-                            ComSend("4V0");
+                            pausebtn();
                             button12.BackColor = Color.Green;
                         }
                         else
@@ -229,25 +207,7 @@ namespace WeldTestSystem
                         }
                         if (bDISts[10] == 1)
                         {
-                            ComSend("1LA0");
-                            ComSend("2LA0");
-                            ComSend("3LA0");
-                            ComSend("4LA0");
-
-                            ComSend("1SP200");
-                            ComSend("2SP200");
-                            ComSend("3SP200");
-                            ComSend("4SP200");
-
-                            ComSend("1NP");
-                            ComSend("2NP");
-                            ComSend("3NP");
-                            ComSend("4NP");
-
-                            ComSend("1M");
-                            ComSend("2M");
-                            ComSend("3M");
-                            ComSend("4M");
+                            resetbtn();
                             button15.BackColor = Color.Green;
                         }
                         else
@@ -267,10 +227,8 @@ namespace WeldTestSystem
                         }
                         if (bDISts[12] == 1)
                         {
-                            ComSend("1V0");
-                            ComSend("2V0");
-                            ComSend("3V0");
-                            ComSend("4V0");
+                            clampbtn();
+                           
                             button13.BackColor = Color.Green;
                         }
                         else
@@ -296,8 +254,15 @@ namespace WeldTestSystem
 
         }
 
+        private void clampbtn()
+        {
+            ComSend("1V0");
+            ComSend("2V0");
+            ComSend("3V0");
+            ComSend("4V0");
+        }
 
-
+     
 
         static USB5831.USB5831_PARA_AD ADPara; // 硬件参数
         Byte[] bDISts = new Byte[13];
@@ -688,67 +653,126 @@ namespace WeldTestSystem
 
         private void button3_Click(object sender, EventArgs e)
         {
-           ComSend("3lr10000");
-           ComSend("3sp200");
-           ComSend("3m");
+            
+            upmove();
 
+        }
+        private void upmove()
+        {
+            String str = "3lr" + textBoxup.Text;
+            ComSend(str);
+            ComSend("3sp200");
+            ComSend("3m");
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            ComSend("2lr10000");
-            ComSend("2sp200");
-            ComSend("2m");
+            forwardmove();
 
            
         }
 
+        private void forwardmove()
+        {
+            String str = "2lr" + textBoxforward.Text;
+            ComSend(str);
+            ComSend("2sp200");
+            ComSend("2m");
+        }
+
         private void button6_Click(object sender, EventArgs e)
         {
+            backwardmove();
+           
+        }
 
-            ComSend("2lr-10000");
+        private void backwardmove()
+        {
+            String str = "2lr-" + textBoxback.Text;
+            ComSend(str);
             ComSend("2sp200");
             ComSend("2m");
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            ComSend("3lr-10000");
-            ComSend("3sp200");         
-            ComSend("3m");
+            downmove();
+          
            
+        }
+
+        private void downmove()
+        {
+            String str = "3lr-" + textBoxdown.Text;
+            ComSend(str);
+            ComSend("3sp200");
+            ComSend("3m");
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            ComSend("1lr-10000");
+            leftmove();
+          
+        }
+
+        private void leftmove()
+        {
+            String str = "1lr-" + textBoxleft.Text;
+            ComSend(str);
             ComSend("1sp200");
             ComSend("1m");
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
-            ComSend("1lr10000");
+            rightmove();
+           
+        }
+
+        private void rightmove()
+        {
+            String str = "1lr" + textBoxright.Text;
+            ComSend(str);
             ComSend("1sp200");
             ComSend("1m");
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-            ComSend("4LR1000");
+            clockmove();
+           
+        }
+
+        private void clockmove()
+        {
+            String str = "4LR" + textBoxclock.Text;
+            ComSend(str);
             ComSend("4sp200");
             ComSend("4m");
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
-            ComSend("4LR-1000");
-            ComSend("4sp200");
-            ComSend("4m");
+            counterclock();
+          
 
         }
 
+        private void counterclock()
+        {
+            String str = "4LR-" + textBoxcounterclock.Text;
+            ComSend(str);
+            ComSend("4sp200");
+            ComSend("4m");
+        }
+
         private void button11_Click(object sender, EventArgs e)
+        {
+            conformbtn();
+           
+        }
+
+        private void conformbtn()
         {
             ComSend("1HO");
             ComSend("2HO");
@@ -757,6 +781,12 @@ namespace WeldTestSystem
         }
 
         private void button12_Click(object sender, EventArgs e)
+        {
+            pausebtn();
+          
+        }
+
+        private void pausebtn()
         {
             ComSend("1V0");
             ComSend("2V0");
@@ -797,6 +827,13 @@ namespace WeldTestSystem
 
         private void button15_Click(object sender, EventArgs e)
         {
+
+            resetbtn();
+           
+        }
+
+        private void resetbtn()
+        {
             ComSend("1LA0");
             ComSend("2LA0");
             ComSend("3LA0");
@@ -817,6 +854,8 @@ namespace WeldTestSystem
             ComSend("3M");
             ComSend("4M");
         }
+
+
 
         private void button18_Click(object sender, EventArgs e)
         {
@@ -856,6 +895,11 @@ namespace WeldTestSystem
         }
 
         private void button17_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxup_TextChanged(object sender, EventArgs e)
         {
 
         }
