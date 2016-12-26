@@ -29,13 +29,12 @@ namespace WeldTestSystem
                
             }
 
-
-
-            panel1.Visible = false;
-
-            panelMain.Visible = true;
            
-         
+
+          
+
+            panel1.Visible = true;
+            panel2.Visible = false;
             button1.BackColor = Color.Red;
             button14.BackColor = Color.Red;
             button12.BackColor = Color.Red;
@@ -68,13 +67,8 @@ namespace WeldTestSystem
 
 
 
-            for (int i=0;i<listcount;i++)
-            {
-                xlist.Add(0.0001); 
-                ylist.Add(0.0001);
-                zlist.Add(0.0001);
-                wlist.Add(0.0001);
-            }
+           
+
           
 
         }
@@ -99,8 +93,8 @@ namespace WeldTestSystem
             {
 
 
-
               
+
                 ComSend("1pos");
                 String a = ComRead2(1);
                 posxyzlis[0] = a;
@@ -371,7 +365,8 @@ namespace WeldTestSystem
 
                             if (bDISts[0] == 1)
                             {
-                                rightmove();
+                                Thread rightmovethread = new Thread(rightmove);
+                                rightmovethread.Start();
                                 button8.BackColor = Color.Green;
 
                             }
@@ -382,7 +377,8 @@ namespace WeldTestSystem
                             if (bDISts[1] == 1)
                             {
 
-                                leftmove();
+                                Thread leftmovethread = new Thread(leftmove);
+                                leftmovethread.Start();
                                 button7.BackColor = Color.Green;
                             }
                             else
@@ -392,7 +388,8 @@ namespace WeldTestSystem
                             }
                             if (bDISts[2] == 1)
                             {
-                                forwardmove();
+                                Thread forwardmovethread = new Thread(forwardmove);
+                                forwardmovethread.Start();
 
                                 button5.BackColor = Color.Green;
                             }
@@ -404,7 +401,8 @@ namespace WeldTestSystem
                             if (bDISts[3] == 1)
                             {
 
-                                backwardmove();
+                                Thread backwardmovethread = new Thread(backwardmove);
+                                backwardmovethread.Start();
 
                                 button6.BackColor = Color.Green;
                             }
@@ -415,7 +413,8 @@ namespace WeldTestSystem
                             }
                             if (bDISts[4] == 1)
                             {
-                                downmove();
+                                Thread downmovethread = new Thread(downmove);
+                                downmovethread.Start();
                                 button4.BackColor = Color.Green;
                             }
                             else
@@ -425,7 +424,9 @@ namespace WeldTestSystem
                             }
                             if (bDISts[5] == 1)
                             {
-                                upmove();
+
+                                Thread upmovethread = new Thread(upmove);
+                                upmovethread.Start();
                                 button3.BackColor = Color.Green;
                             }
                             else
@@ -435,7 +436,8 @@ namespace WeldTestSystem
                             }
                             if (bDISts[6] == 1)
                             {
-                                counterclock();
+                                Thread counterclockthread = new Thread(counterclock);
+                                counterclockthread.Start();
                                 button10.BackColor = Color.Green;
                             }
                             else
@@ -445,7 +447,8 @@ namespace WeldTestSystem
                             }
                             if (bDISts[7] == 1)
                             {
-                                clockmove();
+                                Thread clockmovethread = new Thread(clockmove);
+                                clockmovethread.Start();
                                 button9.BackColor = Color.Green;
                             }
                             else
@@ -455,7 +458,8 @@ namespace WeldTestSystem
                             }
                             if (bDISts[8] == 1)
                             {
-                                conformbtn();
+                                Thread conformthread = new Thread(conformbtn);
+                                conformthread.Start();
                                 button11.BackColor = Color.Green;
                             }
                             else
@@ -466,7 +470,8 @@ namespace WeldTestSystem
 
                             if (bDISts[9] == 1)
                             {
-                                pausebtn();
+                                Thread pausethread = new Thread(pausebtn);
+                                pausethread.Start();
                                 button12.BackColor = Color.Green;
                             }
                             else
@@ -476,7 +481,8 @@ namespace WeldTestSystem
                             }
                             if (bDISts[10] == 1)
                             {
-                                resetbtn();
+                                Thread restthread = new Thread(resetbtn);
+                                restthread.Start();
 
                                 button15.BackColor = Color.Green;
                             }
@@ -764,16 +770,17 @@ namespace WeldTestSystem
 
         private void 预设参数ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            panelMain.Visible = false;
-            panel1.Visible = true;
-       
+            panel1.Visible = false;
+
+            panel2.Visible = true;
+
 
         }
 
         private void button19_Click(object sender, EventArgs e)
         {
-            panelMain.Visible = true;
-          
+            panel1.Visible = true;
+            panel2.Visible = false;
 
 
         }
@@ -816,8 +823,8 @@ namespace WeldTestSystem
 
         private void button20_Click(object sender, EventArgs e)
         {
-            panelMain.Visible = true;
-          
+            panel1.Visible = true;
+            panel2.Visible = false;
         }
 
         SerialPort port;
@@ -910,18 +917,6 @@ namespace WeldTestSystem
 
         }
 
-        TimeSpan timevx1, timevx2;
-        Int32 posvx1, posvx2;
-
-        TimeSpan timevy1, timevy2;
-        Int32 posvy1, posvy2;
-
-        TimeSpan timevz1, timevz2;
-        Int32 posvz1, posvz2;
-
-        TimeSpan timevw1, timevw2;
-        Int32 posvw1, posvw2;
-      
 
         private String ComRead2(int a)
         {
@@ -939,152 +934,14 @@ namespace WeldTestSystem
 
                     if (a == 1)
                     {
-                     
                         OutMoniX(pos);
-                        timevx2 = DateTime.Now.TimeOfDay;
-                        double deltatime=0;
-                        
-                            Int32 deltapos=0;
-                        try
-                        {  
-                             deltatime = timevx2.Subtract(timevx1).TotalMinutes;
-                           
-                        }
-                           catch { }
-
-                        timevx1 = timevx2;
-
-                            posvx2= pos;
-         
-                       
-                try
-                        {
-                             deltapos = posvx2 - posvx1;
-                      }
-                           catch { }
-
-                posvx1 = posvx2;
-
-                try
-                {
-                    double vv = deltapos / deltatime;
-                    OutMoniVX(vv);
-                }
-                catch { }
-
                     }
                     if (a == 2)
-                    { 
-                        
-                        
-                        OutMoniY(pos);
-
-
-                        timevy2 = DateTime.Now.TimeOfDay;
-                        double deltatime = 0;
-
-                        Int32 deltapos = 0;
-                        try
-                        {
-                            deltatime = timevy2.Subtract(timevy1).TotalMinutes;
-
-                        }
-                        catch { }
-
-                        timevy1 = timevy2;
-
-                        posvy2 = pos;
-
-
-                        try
-                        {
-                            deltapos = posvy2 - posvy1;
-                        }
-                        catch { }
-
-                        posvy1 = posvy2;
-
-                        try
-                        {
-                            double vv= deltapos / deltatime;
-                            OutMoniVY(vv);
-                        }
-                        catch { }
-                    
-                    
-                    
-                    }
+                    { OutMoniY(pos); }
                     if (a == 3)
-                    { OutMoniZ(pos);
-                        
-
-                    timevz2 = DateTime.Now.TimeOfDay;
-                    double deltatime = 0;
-
-                    Int32 deltapos = 0;
-                    try
-                    {
-                        deltatime = timevz2.Subtract(timevz1).TotalMinutes;
-
-                    }
-                    catch { }
-
-                    timevz1 = timevz2;
-
-                    posvz2 = pos;
-
-
-                    try
-                    {
-                        deltapos = posvz2 - posvz1;
-                    }
-                    catch { }
-
-                    posvz1 = posvz2;
-
-                    try
-                    {
-                        double vv = deltapos / deltatime;
-                        OutMoniVZ(vv);
-                    }
-                    catch { }
-                    
-                    
-                    }
+                    { OutMoniZ(pos); }
                     if (a == 4)
-                    { OutMoniW(pos);
-
-                    timevw2 = DateTime.Now.TimeOfDay;
-                    double deltatime = 0;
-
-                    Int32 deltapos = 0;
-                    try
-                    {
-                        deltatime = timevw2.Subtract(timevw1).TotalMinutes;
-
-                    }
-                    catch { }
-
-                    timevw1 = timevw2;
-
-                    posvw2 = pos;
-
-
-                    try
-                    {
-                        deltapos = posvw2 - posvw1;
-                    }
-                    catch { }
-
-                    posvw1 = posvw2;
-
-                    try
-                    {
-                        double vv = deltapos / deltatime;
-                        OutMoniVW(vv);
-                    }
-                    catch { }
-                    }
+                    { OutMoniW(pos); }
 
                     return res;
                 }
@@ -1095,10 +952,8 @@ namespace WeldTestSystem
 
         }
 
-        static int sleeptime = 300;
-        static int listcount = 1000;
-        static int xscale = 5;
 
+        static int listcount = 300;
         public delegate void OutMoniWDelegate(Int32 a);
         public void OutMoniW(Int32 a)
         {
@@ -1175,7 +1030,6 @@ namespace WeldTestSystem
 
         }
 
-       
 
         public delegate void OutMoniXDelegate(Int32 a);
         public void OutMoniX(Int32 a)
@@ -1202,66 +1056,6 @@ namespace WeldTestSystem
 
         }
 
-        public delegate void OutMoniVXDelegate(double a);
-        public void OutMoniVX(double a)
-        {
-
-            if (labelvx.InvokeRequired)
-            {
-                OutMoniVXDelegate outMoniVXDelegate = new OutMoniVXDelegate(OutMoniVX);
-                this.BeginInvoke(outMoniVXDelegate, new object[] { a });
-                return;
-            }
-            double b = a / xbase;
-            labelvx.Text = b.ToString("0");
-
-        }
-
-        public delegate void OutMoniVYDelegate(double a);
-        public void OutMoniVY(double a)
-        {
-
-            if (labelvy.InvokeRequired)
-            {
-                OutMoniVYDelegate outMoniVYDelegate = new OutMoniVYDelegate(OutMoniVY);
-                this.BeginInvoke(outMoniVYDelegate, new object[] { a });
-                return;
-            }
-            double b = a / ybase;
-            labelvy.Text = b.ToString("0");
-
-        }
-
-        public delegate void OutMoniVZDelegate(double a);
-        public void OutMoniVZ(double a)
-        {
-
-            if (labelvz.InvokeRequired)
-            {
-                OutMoniVZDelegate outMoniVZDelegate = new OutMoniVZDelegate(OutMoniVZ);
-                this.BeginInvoke(outMoniVZDelegate, new object[] { a });
-                return;
-            }
-            double b = a / zbase;
-            labelvz.Text = b.ToString("0");
-
-        }
-
-        public delegate void OutMoniVWDelegate(double a);
-        public void OutMoniVW(double a)
-        {
-
-            if (labelvw.InvokeRequired)
-            {
-                OutMoniVWDelegate outMoniVWDelegate = new OutMoniVWDelegate(OutMoniVW);
-                this.BeginInvoke(outMoniVWDelegate, new object[] { a });
-                return;
-            }
-            double b = a / wbase;
-            labelvw.Text = b.ToString("0");
-
-        }
-
 
         public delegate void OutVecdataDelegate(String a);
         public void OutVecdata(String a)
@@ -1281,7 +1075,7 @@ namespace WeldTestSystem
         public void OutPanelxfresh()
         {
 
-            if (panelXshow.InvokeRequired)
+            if (panel3.InvokeRequired)
             {
                 OutPanelxfreshDelegate outPanelxfreshDelegate = new OutPanelxfreshDelegate(OutPanelxfresh);
                 this.BeginInvoke(outPanelxfreshDelegate);
@@ -1289,7 +1083,7 @@ namespace WeldTestSystem
             }
 
             
-            panelXshow.Refresh();
+            panel3.Refresh();
 
         }
 
@@ -1297,7 +1091,7 @@ namespace WeldTestSystem
         public void OutPanelyfresh()
         {
 
-            if (panelYshow.InvokeRequired)
+            if (panel4.InvokeRequired)
             {
                 OutPanelyfreshDelegate outPanelyfreshDelegate = new OutPanelyfreshDelegate(OutPanelyfresh);
                 this.BeginInvoke(outPanelyfreshDelegate);
@@ -1305,7 +1099,7 @@ namespace WeldTestSystem
             }
 
 
-            panelYshow.Refresh();
+            panel4.Refresh();
 
         }
 
@@ -1313,7 +1107,7 @@ namespace WeldTestSystem
         public void OutPanelzfresh()
         {
 
-            if (panelZshow.InvokeRequired)
+            if (panel5.InvokeRequired)
             {
                 OutPanelzfreshDelegate outPanelzfreshDelegate = new OutPanelzfreshDelegate(OutPanelzfresh);
                 this.BeginInvoke(outPanelzfreshDelegate);
@@ -1321,7 +1115,7 @@ namespace WeldTestSystem
             }
 
 
-            panelZshow.Refresh();
+            panel5.Refresh();
 
         }
 
@@ -1329,7 +1123,7 @@ namespace WeldTestSystem
         public void OutPanelwfresh()
         {
 
-            if (panelWshow.InvokeRequired)
+            if (panel6.InvokeRequired)
             {
                 OutPanelwfreshDelegate outPanelwfreshDelegate = new OutPanelwfreshDelegate(OutPanelwfresh);
                 this.BeginInvoke(outPanelwfreshDelegate);
@@ -1337,7 +1131,7 @@ namespace WeldTestSystem
             }
 
 
-            panelWshow.Refresh();
+            panel6.Refresh();
 
         }
 
@@ -1412,7 +1206,7 @@ namespace WeldTestSystem
         private void sendtext()
         {
             ComSend(textBox6.Text);
-           ComRead();
+            ComRead();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -1766,7 +1560,7 @@ namespace WeldTestSystem
            
         }
 
-       
+        static int sleeptime = 200;
 
         private void drawx()
         {
@@ -1854,7 +1648,6 @@ namespace WeldTestSystem
 
                 List<String> vec = new List<String>();
                 String str = lis[i];
-                OutVecdata(str);
                 String[] arrstr = str.Split(';');
                 for (int j = 1; j < arrstr.Length; j++)
                 {
@@ -1866,7 +1659,7 @@ namespace WeldTestSystem
                 {
                     if (vec[k] != "")
                     {
-                        
+                        OutVecdata(vec[k]);
                         ComSend(vec[k]);
                         ComRead();
 
@@ -1901,13 +1694,9 @@ namespace WeldTestSystem
 
         private void button18_Click(object sender, EventArgs e)
         {
-               listBox1.Items.Clear();
-               
+            listBox1.Items.Clear();
                 Thread spurthread = new Thread(spurxyz);
-              
-                    spurthread.Start();
-               
-            
+                spurthread.Start();
 
        
         }
@@ -2012,10 +1801,10 @@ namespace WeldTestSystem
             
             if (drawflag == true)
             {
-                XYLinesFactory.DrawXY(panelXshow);
-                XYLinesFactory.DrawYLine(panelXshow, -10, 10, 4, "X");
-                XYLinesFactory.DrawXLine(panelXshow, listcount, xscale);
-                XYLinesFactory.DrawY(panelXshow, -10, 10, listcount, xlist);
+                XYLinesFactory.DrawXY(panel3);
+                XYLinesFactory.DrawYLine(panel3, -10, 10, 4, "X");
+                XYLinesFactory.DrawXLine(panel3, listcount, 10);
+                XYLinesFactory.DrawY(panel3, -10, 10, listcount, xlist);
             }
             
         }
@@ -2024,10 +1813,10 @@ namespace WeldTestSystem
         {
             if (drawflag == true)
             {
-                XYLinesFactory.DrawXY(panelWshow);
-                XYLinesFactory.DrawYLine(panelWshow, -90, 90, 4, "W");
-                XYLinesFactory.DrawXLine(panelWshow, listcount, xscale);
-                XYLinesFactory.DrawY(panelWshow, -90, 90, listcount, wlist);
+                XYLinesFactory.DrawXY(panel6);
+                XYLinesFactory.DrawYLine(panel6, -90, 90, 4, "W");
+                XYLinesFactory.DrawXLine(panel6, listcount, 10);
+                XYLinesFactory.DrawY(panel6, -90, 90, listcount, wlist);
             }
         }
 
@@ -2035,10 +1824,10 @@ namespace WeldTestSystem
         {
             if (drawflag == true)
             {
-                XYLinesFactory.DrawXY(panelYshow);
-                XYLinesFactory.DrawYLine(panelYshow, -4, 4, 4,"Y");
-                XYLinesFactory.DrawXLine(panelYshow, listcount, xscale);
-                XYLinesFactory.DrawY(panelYshow, -4, 4, listcount, ylist);
+                XYLinesFactory.DrawXY(panel4);
+                XYLinesFactory.DrawYLine(panel4, -4, 4, 4,"Y");
+                XYLinesFactory.DrawXLine(panel4, listcount, 10);
+                XYLinesFactory.DrawY(panel4, -4, 4, listcount, ylist);
             }
         }
 
@@ -2046,26 +1835,12 @@ namespace WeldTestSystem
         {
             if (drawflag == true)
             {
-                XYLinesFactory.DrawXY(panelZshow);
-                XYLinesFactory.DrawYLine(panelZshow, -10, 10,4, "Z");
-                XYLinesFactory.DrawXLine(panelZshow, listcount, xscale);
-                XYLinesFactory.DrawY(panelZshow, -10, 10, listcount, zlist);
+                XYLinesFactory.DrawXY(panel5);
+                XYLinesFactory.DrawYLine(panel5, -10, 10,4, "Z");
+                XYLinesFactory.DrawXLine(panel5, listcount, 10);
+                XYLinesFactory.DrawY(panel5, -10, 10, listcount, zlist);
             }
         }
-
-        private void button23_Click(object sender, EventArgs e)
-        {
-            panelMain.Visible = true;
-            panel1.Visible = false;
-        }
-
-        private void button24_Click(object sender, EventArgs e)
-        {
-            panelMain.Visible = true;
-            panel1.Visible = false;
-        }
-
-   
 
      
        
